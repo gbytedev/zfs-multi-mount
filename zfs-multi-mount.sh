@@ -11,9 +11,13 @@ for dataset in "$@"; do
     continue
   fi
 
-  if [[ $(zfs get keystatus "$dataset" -H -o value) == "unavailable" ]] ; then
+  if [[ $(zfs get keystatus "$dataset" -H -o value) == "unavailable" ]]; then
     if [ ! -v key ]; then
       read -srp "Enter passphrase: " key ; echo
+    fi
+    if ! echo "$key" | zfs load-key "$dataset"; then
+      echo "ERROR: Incorrect key provided."
+      exit 1
     fi
   fi
 
