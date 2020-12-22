@@ -1,9 +1,26 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-if [[ $# == 0 ]]; then
-    echo "ERROR: Datasets are needed as arguments."
+PATH=/usr/bin:/sbin:/bin
+
+help() {
+    echo "Usage: $(basename "$0") DATASET [DATASET]..."
+    echo "Usage: $(basename "$0") pool/dataset1 pool/dataset2"
+    echo
+    echo " -h, --help                     show this help"
+    exit 0
+}
+
+for arg in "$@"; do
+  case $arg in
+  -h | --help) help ;;
+  -?*)
+    echo "Unknown option: $1"
     exit 1
-fi
+    ;;
+  esac
+done
+
+[[ $# == 0 ]] && echo "ERROR: Datasets are needed as arguments." && exit 1
 
 for dataset in "$@"; do
   if ! zfs list -H -o name | grep -qx "$dataset"; then
@@ -12,17 +29,12 @@ for dataset in "$@"; do
   fi
 
   if [[ $(zfs get keystatus "$dataset" -H -o value) == "unavailable" ]]; then
-    if [ ! -v key ]; then
-      read -srp "Enter passphrase: " key ; echo
-    fi
-    if ! echo "$key" | zfs load-key "$dataset"; then
-      echo "ERROR: Incorrect key provided."
-      exit 1
-    fi
+    [ ! -v key ] && read -srp "Enter passphrase: " key ; echo
+    ! echo "$key" | zfs load-key "$dataset" && echo "ERROR: Incorrect key provided." && exit 1
   fi
 
-  if sudo zfs mount "$dataset"; then # Mounting as non-root user on Linux is not possible, see https://github.com/openzfs/zfs/issues/10648
-    echo "Dataset '$dataset' has been mounted."
-  fi
+  # Mounting as non-root user on Linux is not possible,
+  # see https://github.com/openzfs/zfs/issues/10648.
+  sudo zfs mount "$dataset" && echo "Dataset '$dataset' has been mounted."
 done
 unset key
