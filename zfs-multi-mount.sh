@@ -56,3 +56,7 @@ for dataset in "${datasets[@]}"; do
   # see https://github.com/openzfs/zfs/issues/10648.
   [ ! -v no_mount ] && sudo zfs mount "$dataset" && echo "Dataset '$dataset' has been mounted."
 done
+
+unset key
+
+exit 0

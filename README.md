@@ -3,7 +3,7 @@ Mounts several ZFS datasets while asking for encryption passphrase as rarely as 
 
 I generally do not endorse reusing passwords, but there are edge cases, like splitting up a pool into datasets for the sake of granular control over some of its properties while still needing the convenience of a single passphrase.
 
-This script can be used in a systemd service unlock encrypted datasets during boot. Practical if using several datasets with the same passphrase.
+This script can be used in a systemd service to unlock encrypted datasets during boot. Practical if using several datasets with the same passphrase.
 
 ## Usage
 ### Load keys of all datasets and mount them
