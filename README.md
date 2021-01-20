@@ -27,12 +27,13 @@ DefaultDependencies=no
 Before=zfs-mount.service
 Before=systemd-user-sessions.service
 After=zfs-import.target
+OnFailure=emergency.target
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 
-ExecStart=zfs-multi-mount.sh --systemd -no-mount
+ExecStart=zfs-multi-mount.sh --systemd --no-mount
 
 [Install]
 WantedBy=zfs-mount.service
