@@ -28,8 +28,7 @@ for arg in "$@"; do
 done
 
 datasets=("$@")
-[ ${#datasets[@]} -eq 0 ] && datasets=($(zfs list -H -o name))
-
+[ ${#datasets[@]} -eq 0 ] && mapfile -t datasets < <(zfs list -H -o name)
 attempt=0
 attempt_limit=3
 
@@ -51,15 +50,15 @@ function load_key {
   fi
   if ! echo "$key" | zfs load-key "$1"; then
     unset key
-    load_key $1
+    load_key "$1"
   fi
   attempt=0
   return 0
 }
 
 for dataset in "${datasets[@]}"; do
-  ! load_key $dataset && exit 1
-  
+  ! load_key "$dataset" && exit 1
+
   # Mounting as non-root user on Linux is not possible,
   # see https://github.com/openzfs/zfs/issues/10648.
   [ ! -v no_mount ] && sudo zfs mount "$dataset" && echo "Dataset '$dataset' has been mounted."
