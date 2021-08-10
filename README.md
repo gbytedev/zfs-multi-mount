@@ -1,7 +1,7 @@
 # zfs-multi-mount
 Mounts several ZFS datasets while asking for encryption passphrase as rarely as possible. If the same encryption passphrase is used on several datasets, it will ask once. For people who feel very confident about that one passphrase.
 
-I generally do not endorse reusing passwords, but there are edge cases, like splitting up a pool into datasets for the sake of granular control over some of its properties while still needing the convenience of a single passphrase.
+I generally do not endorse reusing passwords, but there are edge cases, like splitting up a pool into datasets while not using an encryption root due to some topology constraint, but still needing the convenience of a single passphrase.
 
 This script can be used in a systemd service to unlock encrypted datasets during boot. Practical if using several datasets with the same passphrase.
 
