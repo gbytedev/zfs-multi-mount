@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PATH=/usr/bin:/sbin:/bin
+PATH=$PATH:/usr/bin:/sbin:/bin
 
 help() {
     echo "Usage: $(basename "$0") [OPTION]... [SOURCE_POOL/DATASET]..."
